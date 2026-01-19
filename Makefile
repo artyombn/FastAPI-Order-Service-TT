@@ -8,10 +8,14 @@ create_all_tables:
 
 filldb:
 	make filldb_categories && \
-	make filldb_clients
+	make filldb_clients && \
+	make filldb_orders
 
 filldb_categories:
 	psql $(DB_CONNECTION) -f database/fill_db/categories.sql
 
 filldb_clients:
 	psql $(DB_CONNECTION) -f database/fill_db/clients.sql
+
+filldb_orders:
+	psql $(DB_CONNECTION) -f database/fill_db/orders.sql
