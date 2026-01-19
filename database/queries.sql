@@ -64,3 +64,11 @@ ORDER BY total_quantity_sold DESC
 LIMIT 5;
 
 SELECT * FROM top5_products_last_month;
+
+
+-- 2.3.2 Оптимизация
+-- Для оптимизации, можно добавить СТОЛБЦЫ корневых категорий в таблицу categories
+ALTER TABLE categories ADD COLUMN root_category_id BIGINT;
+ALTER TABLE categories ADD COLUMN root_category_name VARCHAR(100);
+-- Обновить данные для всех категорий где parent_id IS NOT NULL, записав корневую для каждой
+-- в SELECT использовать categories.root_category_name
