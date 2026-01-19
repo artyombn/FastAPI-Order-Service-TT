@@ -9,7 +9,8 @@ create_all_tables:
 filldb:
 	make filldb_categories && \
 	make filldb_clients && \
-	make filldb_orders
+	make filldb_orders && \
+	make filldb_products
 
 filldb_categories:
 	psql $(DB_CONNECTION) -f database/fill_db/categories.sql
@@ -19,3 +20,6 @@ filldb_clients:
 
 filldb_orders:
 	psql $(DB_CONNECTION) -f database/fill_db/orders.sql
+
+filldb_products:
+	psql $(DB_CONNECTION) -f database/fill_db/products.sql
