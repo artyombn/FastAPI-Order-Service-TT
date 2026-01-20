@@ -3,6 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base_model import Base
 from .category import Category
+from .order_product import OrderProduct
 
 
 class Product(Base):
@@ -24,4 +25,10 @@ class Product(Base):
     category: Mapped["Category"] = relationship(
         "Category",
         back_populates="products",
+    )
+
+    order_products: Mapped[list["OrderProduct"]] = relationship(
+        "OrderProduct",
+        back_populates="products",
+        cascade="all, delete-orphan",
     )
