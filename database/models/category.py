@@ -4,6 +4,7 @@ from sqlalchemy import BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base_model import Base
+from .product import Product
 
 
 class Category(Base):
@@ -29,5 +30,11 @@ class Category(Base):
     children: Mapped[list["Category"]] = relationship(
         "Category",
         back_populates="parent",
+        cascade="all, delete-orphan",
+    )
+
+    products: Mapped[list["Product"]] = relationship(
+        "Product",
+        back_populates="category",
         cascade="all, delete-orphan",
     )
