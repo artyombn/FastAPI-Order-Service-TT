@@ -1,7 +1,7 @@
 include .env
 export
 
-DB_CONNECTION = postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)
+DB_CONNECTION = postgresql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)
 
 create_all_tables:
 	psql $(DB_CONNECTION) -f database/schema.sql
