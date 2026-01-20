@@ -2,8 +2,6 @@ from sqlalchemy import BigInteger, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base_model import Base
-from .category import Category
-from .order_product import OrderProduct
 
 
 class Product(Base):

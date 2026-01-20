@@ -2,21 +2,16 @@ from sqlalchemy import BigInteger, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base_model import Base
-from .order import Order
-from .product import Product
+
 
 class OrderProduct(Base):
 
     # Main foreign keys
     order_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("orders.id"),
-        primary_key=True
+        BigInteger, ForeignKey("orders.id"), primary_key=True
     )
     product_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("products.id"),
-        primary_key=True
+        BigInteger, ForeignKey("products.id"), primary_key=True
     )
 
     # Extra info

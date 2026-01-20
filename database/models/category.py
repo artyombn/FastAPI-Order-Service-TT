@@ -4,7 +4,6 @@ from sqlalchemy import BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base_model import Base
-from .product import Product
 
 
 class Category(Base):

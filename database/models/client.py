@@ -2,7 +2,6 @@ from sqlalchemy import BigInteger
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base_model import Base
-from .order import Order
 
 
 class Client(Base):
