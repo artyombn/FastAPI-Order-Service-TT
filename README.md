@@ -1,38 +1,154 @@
 # FastAPI-Order-Service-TT
-FastAPI Order Service (Technical Task)
+## Тестовое задание: сервис управления заказами на FastAPI с асинхронным подключением к PostgreSQL
+### Проект реализует:
+- Полностью реализованную SQL-базу данных с таблицами для товаров, категорий, клиентов и заказов;
+- Решения задач по написанию SQL запросов;
+- REST API для работы с заказами и товарами;
 
-Таблица "products":  
-id   
-name  
-quantity  
-price  
-category_id (foreign key -> categories.id)  
+## Схема базы данных
+### Таблицы:</summary>
+***products (Номенклатура):***  
+`id` - уникальный идентификатор товара  
+`name` - уникальный идентификатор товара  
+`quantity` - количество на складе  
+`price` - цена товара  
+`category_id` - (foreign key -> categories.id)
 
-
-Таблица "categories":  
-id  
-name  
-parent_id (foreign -> categories.id)  
-
-
-Таблица "clients" ->  
-id  
-first_name  
-last_name  
-email  
-address  
+***categories (Каталог товаров, дерево категорий):***  
+`id` - уникальный идентификатор категории  
+`name` - название категории  
+`parent_id` - (foreign -> categories.id)  
 
 
-Таблица "orders"  
-id  
-created_at  
-status  
-client_id (foreign key -> clients.id)  
+***clients (Клиенты):***  
+`id` - уникальный идентификатор клиента  
+`first_name` - имя    
+`last_name` - фамилия    
+`email` - email    
+`address` - адрес    
 
-**Many To Many relationship (order -> products and product -> orders)**  
-Таблица "orders_products”
 
-order_id (foreign key -> orders.id)  
-product_id (foreign key -> products.id)  
-product_quantity  
-product_price_at_order  
+***orders (Заказы):***    
+`id` - уникальный идентификатор заказа  
+`created_at` - дата и время создания заказа _(`DEFAULT now()` по умолчанию)_  
+`status` - статус заказа (`created` по умолчанию)  
+`client_id` - (foreign key -> clients.id)  
+
+***orders_products (Связь M2M заказы -> товары):***
+`order_id` - (foreign key -> orders.id)  
+`product_id` - (foreign key -> products.id)  
+`product_quantity` - количество товара в заказе  
+`product_price_at_order` - цена товара на момент заказа  
+
+## Решение SQL задач
+*2.1. Получение информации о сумме товаров заказанных под каждого клиента (Наименование клиента, сумма)*  
+`database/queries.sql:2`  
+*2.2. Найти количество дочерних элементов первого уровня вложенности для категорий номенклатуры.*  
+`database/queries.sql:18`  
+*2.3.1. Написать текст запроса для отчета (view) «Топ-5 самых покупаемых товаров за последний месяц» (по количеству штук в заказах). В отчете должны быть: Наименование товара, Категория 1-го уровня, Общее количество проданных штук.*  
+`database/queries.sql:31`  
+*2.3.2. Проанализировать написанный в п. 2.3.1 запрос и структуру БД. Предложить варианты оптимизации этого запроса и общей схемы данных для повышения производительности системы в условиях роста данных (тысячи заказов в день).*  
+`database/queries.sql:69`  
+
+
+## Установка и запуск
+### 1. Установка зависимостей
+Проект использует Poetry для управления зависимостями
+```sh
+pip install poetry
+poetry install
+```
+### 2. Настройка окружения
+Переименуйте файл `.env_copy` → `.env` и настройте его
+
+```ini
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=db
+DB_HOST=localhost
+DB_PORT=5432
+DOCKER=False # True для запуска через Docker
+```
+
+
+### 3. Подключение к базе данных
+В качестве СУБД в проекте используется PostgreSQL  
+Запустить контейнер postgresql и заполнить БД данными с помощью `Makefile`:
+```sh
+sudo apt install make
+make create_all_tables
+make filldb
+```
+
+### 4. Запуск приложения
+#### Локально:
+```sh
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+#### Через Docker Compose:
+
+```sh
+docker-compose up -d
+```
+
+### 5. Swagger документация
+
+После запуска API будет доступна документация Swagger по адресу:
+
+```
+http://localhost:8000/docs
+```
+
+## REST API
+
+### 1) Получение информации о заказе
+**Метод:** `GET /orders/{order_id}`
+
+**Пример ответа:** OrderOutput schema
+```json
+{
+  "id": 2,
+  "created_at": "2026-01-19T23:11:37.190275",
+  "status": "confirmed",
+  "client_id": 2
+}
+```
+
+### 2) Получение информации о продукте
+**Метод:** `GET /products/{product_id}`
+
+**Пример ответа:** ProductOutput schema
+```json
+{
+  "id": 1,
+  "name": "Ноутбук ASUS ROG Strix",
+  "quantity": 8,
+  "price": 129999.99,
+  "category_id": 12
+}
+```
+
+### 3) Добавление продукта в заказ
+**Метод:** `POST /orders/{order_id}/products/{product_id}`  
+**Тело запроса:**
+```json
+{
+  "order_id": 1,
+  "product_id": 1,
+  "quantity": 1
+}
+```
+
+**Пример успешного добавления:** OrderProductOutput schema
+```json
+{
+  "order_id": 1,
+  "product_id": 1,
+  "product_quantity": 5,
+  "product_price_at_order": 129999.99
+}
+```
+**Логика метода:**  
+- Если товар уже есть в заказе, количество увеличивается.
+- Если товара или заказа нет в наличии, возвращается ошибка.
