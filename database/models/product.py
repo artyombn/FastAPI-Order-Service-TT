@@ -1,7 +1,7 @@
 from sqlalchemy import BigInteger, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base_model import Base
+from database.models.base_model import Base
 
 
 class Product(Base):
@@ -27,6 +27,6 @@ class Product(Base):
 
     order_products: Mapped[list["OrderProduct"]] = relationship(
         "OrderProduct",
-        back_populates="products",
+        back_populates="product",
         cascade="all, delete-orphan",
     )

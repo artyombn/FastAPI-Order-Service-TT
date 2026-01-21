@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy import BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base_model import Base
+from database.models.base_model import Base
 
 
 class Category(Base):

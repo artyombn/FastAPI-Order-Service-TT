@@ -1,10 +1,11 @@
 from sqlalchemy import BigInteger, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base_model import Base
+from database.models.base_model import Base
 
 
 class OrderProduct(Base):
+    __tablename__ = "orders_products"
 
     # Main foreign keys
     order_id: Mapped[int] = mapped_column(

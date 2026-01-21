@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import BigInteger, TIMESTAMP, func, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base_model import Base
+from database.models.base_model import Base
 
 
 class Order(Base):
@@ -25,11 +25,11 @@ class Order(Base):
 
     client: Mapped["Client"] = relationship(
         "Client",
-        back_populates="orders",
+        back_populates="order",
     )
 
     order_products: Mapped[list["OrderProduct"]] = relationship(
         "OrderProduct",
-        back_populates="orders",
+        back_populates="order",
         cascade="all, delete-orphan",
     )

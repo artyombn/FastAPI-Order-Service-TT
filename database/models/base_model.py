@@ -21,4 +21,7 @@ class Base(AsyncAttrs, DeclarativeBase):
 
     @declared_attr
     def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}s"
+        name = cls.__name__.lower()
+        if name == "category":
+            return "categories"
+        return name + "s"

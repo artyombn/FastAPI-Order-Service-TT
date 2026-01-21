@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -7,10 +9,10 @@ class OrderBase(BaseModel):
     Base Order schema
     """
 
-    created_at: datetime = Field(
+    created_at: Optional[datetime] = Field(
         description="Order creation datetime",
     )
-    status: str = Field(
+    status: Optional[str] = Field(
         min_length=3,
         max_length=30,
         description="Order status",
