@@ -19,7 +19,7 @@ class Order(Base):
     client_id: Mapped[int] = mapped_column(
         BigInteger,
         ForeignKey("clients.id"),
-        nullable=True,
+        nullable=False,
         index=True,
     )
 
