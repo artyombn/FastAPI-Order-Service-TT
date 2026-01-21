@@ -1,8 +1,20 @@
 services:
+  web:
+    image: fastapi_app
+    container_name: fastapi_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    restart: always
   pgdb:
     image: postgres:latest
     container_name: postgres_db
-    restart: always
+    depends_on:
+      - web
     env_file:
       - .env
     ports:
@@ -12,3 +24,4 @@ services:
 
 volumes:
   local_pgdata:
+    driver: local
