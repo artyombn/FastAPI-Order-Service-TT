@@ -37,8 +37,10 @@ class OrderServices:
 
         product = result_product.scalar_one_or_none()
         if not product:
-            raise ValueError(f"Product not found, id={id}")
+            raise ValueError(f"Product not found, id={product_id}")
         order = result_order.scalar_one_or_none()
+        if not order:
+            raise ValueError(f"Order not found, id={order_id}")
         if product.quantity < product_quantity:
             raise ValueError(
                 f"Not enough product in stock. Available only -> {product.quantity}"
