@@ -145,7 +145,7 @@ http://localhost:8000/docs
 ```
 
 ### 3) Добавление продукта в заказ
-**Метод:** `POST /orders/{order_id}/products/{product_id}`  
+**Метод:** `POST /orders/add-product-to-order`  
 **Тело запроса:**
 ```json
 {

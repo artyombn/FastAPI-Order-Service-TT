@@ -27,7 +27,7 @@ async def get_order_by_id(
         raise HTTPException(status_code=404, detail=f"Order not found: {order_id}")
 
 
-@router.post("/add-product", response_model=OrderProductOutput)
+@router.post("/add-product-to-order", response_model=OrderProductOutput)
 async def add_product_to_order(
     request: AddProductToOrder,
     session: AsyncSession = Depends(get_async_session),
