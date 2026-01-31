@@ -12,6 +12,6 @@ class ProductServices:
         product_id: int,
         session: AsyncSession,
     ) -> Product_db | None:
-        query = select(Product_db).where(Product_db.id == product_id)
+        query = select(Product_db).where(Product_db.product_id == product_id)
         product = await session.execute(query)
         return product.scalar_one_or_none()

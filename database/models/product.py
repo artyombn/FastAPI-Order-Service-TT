@@ -7,14 +7,16 @@ from database.models.base_model import Base
 class Product(Base):
 
     # Main fields
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    product_id: Mapped[int] = mapped_column(
+        BigInteger, primary_key=True, autoincrement=True
+    )
     name: Mapped[str] = mapped_column(nullable=False)
     quantity: Mapped[int] = mapped_column(nullable=False)
     price: Mapped[int] = mapped_column(Numeric(10, 2), nullable=False)
 
     category_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("categories.id"),
+        ForeignKey("categories.category_id"),
         nullable=False,
         index=True,
     )

@@ -9,11 +9,13 @@ from database.models.base_model import Base
 class Category(Base):
 
     # Main fields
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    category_id: Mapped[int] = mapped_column(
+        BigInteger, primary_key=True, autoincrement=True
+    )
     name: Mapped[str] = mapped_column(nullable=False)
     parent_id: Mapped[Optional[int]] = mapped_column(
         BigInteger,
-        ForeignKey("categories.id"),
+        ForeignKey("categories.category_id"),
         nullable=True,
         index=True,
     )
@@ -21,7 +23,7 @@ class Category(Base):
     # Relationships child -> parent -> Many To One
     parent: Mapped[Optional["Category"]] = relationship(
         "Category",
-        remote_side=[id],
+        remote_side=[category_id],
         back_populates="children",
     )
 

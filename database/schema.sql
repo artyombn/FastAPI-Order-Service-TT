@@ -1,15 +1,15 @@
 CREATE TABLE categories(
-	id BIGSERIAL PRIMARY KEY,
+	category_id BIGSERIAL PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	parent_id BIGINT,
 
 	CONSTRAINT category_parent_id_fk
 		FOREIGN KEY(parent_id)
-		REFERENCES categories(id)
+		REFERENCES categories(category_id)
 );
 
 CREATE TABLE products(
-	id BIGSERIAL PRIMARY KEY,
+	product_id BIGSERIAL PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	quantity INT NOT NULL
 		CHECK(quantity>=0),
@@ -19,11 +19,11 @@ CREATE TABLE products(
 
 	CONSTRAINT category_id_fk
 		FOREIGN KEY(category_id)
-		REFERENCES categories(id)
+		REFERENCES categories(category_id)
 );
 
 CREATE TABLE clients(
-	id BIGSERIAL PRIMARY KEY,
+	client_id BIGSERIAL PRIMARY KEY,
 	first_name VARCHAR(100) NOT NULL,
 	last_name VARCHAR(100) NOT NULL,
 	email VARCHAR(255) NOT NULL UNIQUE,
@@ -31,14 +31,14 @@ CREATE TABLE clients(
 );
 
 CREATE TABLE orders(
-	id BIGSERIAL PRIMARY KEY,
+	order_id BIGSERIAL PRIMARY KEY,
 	created_at TIMESTAMP NOT NULL DEFAULT now(),
 	status VARCHAR(32) NOT NULL DEFAULT 'created',
 	client_id BIGINT NOT NULL,
 
 	CONSTRAINT client_id_fk
 		FOREIGN KEY(client_id)
-		REFERENCES clients(id)
+		REFERENCES clients(client_id)
 );
 
 CREATE TABLE orders_products(
@@ -53,9 +53,9 @@ CREATE TABLE orders_products(
 
 	CONSTRAINT order_id_fk
 	    FOREIGN KEY(order_id)
-	    REFERENCES orders(id),
+	    REFERENCES orders(order_id),
 
 	CONSTRAINT product_id_fk
 	    FOREIGN KEY(product_id)
-	    REFERENCES products(id)
+	    REFERENCES products(product_id)
 );

@@ -1,0 +1,1 @@
+sudo -u postgres psql "postgresql://postgres:postgres@localhost:5432/db"

@@ -9,7 +9,9 @@ from database.models.base_model import Base
 class Order(Base):
 
     # Main fields
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    order_id: Mapped[int] = mapped_column(
+        BigInteger, primary_key=True, autoincrement=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP, nullable=False, server_default=func.now()
     )
@@ -18,7 +20,7 @@ class Order(Base):
     # Relationships orders -> client -> Many to One
     client_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("clients.id"),
+        ForeignKey("clients.client_id"),
         nullable=False,
         index=True,
     )

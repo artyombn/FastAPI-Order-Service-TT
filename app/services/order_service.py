@@ -14,7 +14,7 @@ class OrderServices:
         order_id: int,
         session: AsyncSession,
     ) -> Order_db | None:
-        query = select(Order_db).where(Order_db.id == order_id)
+        query = select(Order_db).where(Order_db.order_id == order_id)
         order = await session.execute(query)
         return order.scalar_one_or_none()
 
@@ -29,8 +29,8 @@ class OrderServices:
         if product_quantity <= 0:
             raise ValueError("Product quantity must be >= 1")
 
-        query_product = select(Product_db).where(Product_db.id == product_id)
-        query_order = select(Order_db).where(Order_db.id == order_id)
+        query_product = select(Product_db).where(Product_db.product_id == product_id)
+        query_order = select(Order_db).where(Order_db.order_id == order_id)
 
         result_product = await session.execute(query_product)
         result_order = await session.execute(query_order)

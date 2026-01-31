@@ -1,29 +1,30 @@
 -- 2.1. Получение информации о сумме товаров заказанных под каждого клиента (Наименование клиента, сумма)
 SELECT
-    c.id,
+    c.client_id,
     c.first_name,
     c.last_name,
     c.email,
     SUM(op.product_quantity * op.product_price_at_order) as total_amount
 FROM clients c
-JOIN orders o ON o.client_id = c.id
-JOIN orders_products op ON op.order_id = o.id
+JOIN orders o ON o.client_id = c.client_id
+JOIN orders_products op ON op.order_id = o.order_id
 WHERE o.status IN ('shipped', 'delivered')
 GROUP BY
-    c.id,
+    c.client_id,
     c.first_name,
     c.last_name,
-    c.email;
+    c.email
+ORDER BY SUM(op.product_quantity * op.product_price_at_order);
 
 -- 2.2. Найти количество дочерних элементов первого уровня вложенности для категорий номенклатуры.
 WITH parent_child AS (
     SELECT
-        parent.id as parent_id,
+        parent.category_id as parent_id,
         parent.name as parent_name,
-        COUNT(children.id) as total_children
+        COUNT(children.category_id) as total_children
     FROM categories parent
-    LEFT JOIN categories children ON children.parent_id = parent.id
-    GROUP BY parent.id, parent.name
+    LEFT JOIN categories children ON children.parent_id = parent.category_id
+    GROUP BY parent.category_id, parent.name
 )
 SELECT * FROM parent_child
 ORDER BY parent_id;
@@ -32,34 +33,34 @@ ORDER BY parent_id;
 CREATE VIEW top5_products_last_month AS
 WITH RECURSIVE category_tree AS (
     SELECT
-        id,
+        category_id,
         name,
         name as root_name,
-        id as root_id
+        category_id as root_id
     FROM categories
     WHERE parent_id IS NULL
 
     UNION ALL
 
     SELECT
-        c.id,
+        c.category_id,
         c.name,
         ct.root_name,
         ct.root_id
     FROM categories c
-    JOIN category_tree ct ON c.parent_id = ct.id
+    JOIN category_tree ct ON c.parent_id = ct.category_id
 )
 SELECT
-    n.name as product_name,
+    p.name as product_name,
     ct.name as top_category,
     SUM(op.product_quantity) as total_quantity_sold
 FROM orders_products op
-JOIN orders o ON o.id = op.order_id
-JOIN products n ON n.id = op.product_id
-JOIN category_tree ct ON ct.id = n.category_id
+JOIN orders o ON o.order_id = op.order_id
+JOIN products p ON p.product_id = op.product_id
+JOIN category_tree ct ON ct.category_id = p.category_id
 WHERE EXTRACT(MONTH FROM o.created_at) = EXTRACT(MONTH FROM now()) -1
     AND o.status IN ('shipped', 'delivered')
-GROUP BY n.name, ct.name
+GROUP BY p.name, ct.name
 ORDER BY total_quantity_sold DESC
 LIMIT 5;
 
